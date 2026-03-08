@@ -1,0 +1,10 @@
+com\example\financemanager\controller\TransactionController.class
+com\example\financemanager\repository\TransactionRepository.class
+com\example\financemanager\model\Transaction.class
+com\example\financemanager\model\TransactionType.class
+com\example\financemanager\model\Category.class
+com\example\financemanager\FinanceManagerApplication.class
+com\example\financemanager\controller\CategoryController.class
+com\example\financemanager\service\TransactionService.class
+com\example\financemanager\repository\CategoryRepository.class
+com\example\financemanager\service\CategoryService.class
