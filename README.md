@@ -18,15 +18,26 @@ The backend uses an in-memory H2 database.
 - Java 17
 
 ### Running the application
-To start the application, run the following command from the root of the `personal-finance-service` directory:
+To start the application, run the following command from the root of this directory:
 ```bash
-./mvnw spring-boot:run
+sh scripts/start-backend.sh
 ```
 
 The application will be available at `http://localhost:8080`.
+
+### Running Tests
+To run the tests, use the following command:
+```bash
+sh scripts/test-backend.sh
+```
 
 ### H2 Console
 The H2 database console is available at `http://localhost:8080/h2-console`.
 - **URL:** `jdbc:h2:mem:testdb`
 - **User:** `sa`
 - **Pass:** `password`
+
+## Scripts
+
+- `scripts/start-backend.sh`: Starts the Java Spring Boot application.
+- `scripts/test-backend.sh`: Runs the Maven tests for the backend service.
