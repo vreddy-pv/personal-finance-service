@@ -1,5 +1,6 @@
 package com.example.financemanager.controller;
 
+import com.example.financemanager.dto.SummaryDto;
 import com.example.financemanager.model.Transaction;
 import com.example.financemanager.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class TransactionController {
 
     @Autowired
@@ -23,6 +24,11 @@ public class TransactionController {
     @GetMapping
     public List<Transaction> getAllTransactions() {
         return transactionService.getAllTransactions();
+    }
+
+    @GetMapping("/summary")
+    public SummaryDto getSummary() {
+        return transactionService.getSummary();
     }
 
     @GetMapping("/{id}")

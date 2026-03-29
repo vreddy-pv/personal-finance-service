@@ -1,8 +1,11 @@
 package com.example.financemanager.service;
 
+import com.example.financemanager.dto.SummaryDto;
 import com.example.financemanager.model.Transaction;
+import com.example.financemanager.model.User;
 import com.example.financemanager.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,26 +17,40 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
     public Transaction addTransaction(Transaction transaction) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        transaction.setUser(user);
         return transactionRepository.save(transaction);
     }
 
     public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return transactionRepository.findByUser(user);
     }
 
     public Transaction getTransactionById(Long id) {
-        return transactionRepository.findById(id).orElse(null);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return transactionRepository.findByIdAndUser(id, user).orElse(null);
     }
 
     public Transaction updateTransaction(Long id, Transaction transaction) {
-        if (transactionRepository.existsById(id)) {
-            transaction.setId(id);
-            return transactionRepository.save(transaction);
-        }
-        return null;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return transactionRepository.findByIdAndUser(id, user).map(existingTransaction -> {
+            existingTransaction.setDate(transaction.getDate());
+            existingTransaction.setDescription(transaction.getDescription());
+            existingTransaction.setAmount(transaction.getAmount());
+            existingTransaction.setType(transaction.getType());
+            existingTransaction.setCategory(transaction.getCategory());
+            return transactionRepository.save(existingTransaction);
+        }).orElse(null);
     }
 
     public void deleteTransaction(Long id) {
-        transactionRepository.deleteById(id);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        transactionRepository.findByIdAndUser(id, user).ifPresent(transaction -> transactionRepository.deleteById(id));
+    }
+
+    public SummaryDto getSummary() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return transactionRepository.getSummary(user);
     }
 }
