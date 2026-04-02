@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions().disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/h2-console/**", "/api/users/**").permitAll()
                         .requestMatchers("/api/transactions/**").authenticated()
                         .requestMatchers("/api/categories/**").authenticated()
                         .anyRequest().authenticated()
