@@ -6,8 +6,8 @@ type: reference
 
 ## Scripts
 
-- **Start Backend Service**: `sh scripts/start-backend.sh`
+- **Start Backend Service**: `./mvnw spring-boot:run`
   - Starts the Java Spring Boot application.
 
-- **Run Backend Tests**: `sh scripts/test-backend.sh`
+- **Run Backend Tests**: `./mvnw test`
   - Runs the Maven tests for the backend service.
