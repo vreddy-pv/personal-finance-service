@@ -1,24 +1,33 @@
 package com.example.financemanager.service;
 
 import com.example.financemanager.dto.SummaryDto;
+import com.example.financemanager.model.Category;
 import com.example.financemanager.model.Transaction;
 import com.example.financemanager.model.User;
 import com.example.financemanager.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionService {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
+    private final CategoryService categoryService;
 
     public Transaction addTransaction(Transaction transaction) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         transaction.setUser(user);
+
+        // Ensure the category is managed
+        if (transaction.getCategory() != null) {
+            Category managedCategory = categoryService.addCategory(transaction.getCategory());
+            transaction.setCategory(managedCategory);
+        }
+
         return transactionRepository.save(transaction);
     }
 
@@ -39,7 +48,13 @@ public class TransactionService {
             existingTransaction.setDescription(transaction.getDescription());
             existingTransaction.setAmount(transaction.getAmount());
             existingTransaction.setType(transaction.getType());
-            existingTransaction.setCategory(transaction.getCategory());
+
+            // Ensure the category is managed
+            if (transaction.getCategory() != null) {
+                Category managedCategory = categoryService.addCategory(transaction.getCategory());
+                existingTransaction.setCategory(managedCategory);
+            }
+
             return transactionRepository.save(existingTransaction);
         }).orElse(null);
     }

@@ -14,17 +14,4 @@ public class FinanceManagerApplication {
         SpringApplication.run(FinanceManagerApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner commandLineRunner(
-            AuthenticationService service
-    ) {
-        return args -> {
-            var admin = RegisterRequest.builder()
-                    .username("admin")
-                    .email("admin@mail.com")
-                    .password("password")
-                    .build();
-            System.out.println("Admin token: " + service.register(admin).getToken());
-        };
-    }
 }

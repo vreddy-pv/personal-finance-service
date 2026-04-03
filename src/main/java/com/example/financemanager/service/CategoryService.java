@@ -1,28 +1,28 @@
 package com.example.financemanager.service;
 
 import com.example.financemanager.model.Category;
-import com.example.financemanager.model.User;
 import com.example.financemanager.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public Category addCategory(Category category) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        category.setUser(user);
-        return categoryRepository.save(category);
+        String upperCaseName = category.getName().toUpperCase();
+        return categoryRepository.findByNameIgnoreCase(upperCaseName)
+                .orElseGet(() -> {
+                    category.setName(upperCaseName);
+                    return categoryRepository.save(category);
+                });
     }
 
     public List<Category> getAllCategories() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return categoryRepository.findByUser(user);
+        return categoryRepository.findAll();
     }
 }

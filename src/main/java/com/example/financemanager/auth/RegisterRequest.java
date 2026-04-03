@@ -14,4 +14,5 @@ public class RegisterRequest {
     private String username;
     private String email;
     private String password;
+    private com.example.financemanager.model.Role role;
 }
